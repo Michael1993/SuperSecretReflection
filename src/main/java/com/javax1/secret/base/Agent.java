@@ -8,15 +8,16 @@ public class Agent {
         return new Briefcase(new WeirdCube());
     }
 
-    public static void check(String briefcase) {
-        if (!briefcase.equals(WeirdCube.class.getSimpleName())) {
-            throw new EndOfMissionException("Agent 42 was unable to pass the necessary test to qualify for the mission.");
+    public static void check(String briefcaseContent) {
+        if (!briefcaseContent.equals(WeirdCube.class.getSimpleName())) {
+            throw new EndOfMissionException("You were unable to pass the necessary test to qualify for the mission.");
         }
     }
 
-    public static void identify(Set<String> mods) {
-        if (!mods.stream().allMatch(Agent::modifiers) || mods.size() < 3) {
-            throw new EndOfMissionException("Agent 42 fumbled their words and failed their evaluation.");
+    public static void identify(String mods) {
+        Set<String> split = Set.of(mods.split(" "));
+        if (!split.stream().allMatch(Agent::modifiers) || split.size() < 3) {
+            throw new EndOfMissionException("You fumbled your words and failed their evaluation.");
         }
     }
 
@@ -26,10 +27,16 @@ public class Agent {
 
     public static void accuse(Suspect criminal) {
         if (criminal == null) {
-            throw new EndOfMissionException("Agent 42 was unable to point out anyone from the suspects and failed their evaluation.");
+            throw new EndOfMissionException("You were unable to point out anyone from the suspects and failed your evaluation.");
         }
         if (!Suspect.isGuilty(criminal)) {
-            throw new EndOfMissionException("Agent 42 accused the wrong suspect and failed their evaluation.");
+            throw new EndOfMissionException("You accused the wrong suspect and failed your evaluation.");
+        }
+    }
+
+    public static void checkDocuments(String docs) {
+        if (!docs.equals("Very Secret Documents")) {
+            throw new EndOfMissionException("You did not steal the documents from the safe!");
         }
     }
 }

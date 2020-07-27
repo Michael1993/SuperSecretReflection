@@ -1,7 +1,5 @@
 package com.javax1.secret.help;
 
-import com.javax1.secret.base.Entrance;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -28,7 +26,7 @@ public class Help {
     /**
      * First, the base class.
      */
-    static class Base {
+    static strictfp class Base {
         protected String a = "Hello ";
         public String b;
         private String c;
@@ -109,7 +107,7 @@ public class Help {
     private static void modified() throws NoSuchMethodException {
         Method method = Base.class.getMethod("foo");
         int modifiers = method.getModifiers(); // An int? But why?
-        System.out.println(modifiers);
+        System.out.println(Modifier.toString(modifiers));
         System.out.println(modifiers & Modifier.FINAL); // Bitmasking here
     }
 
