@@ -2,7 +2,7 @@ package com.javax1.secret.base;
 
 public class UndergroundLab {
 
-    public class Safe {
+    public static class Safe {
         private String content = "Very Secret Documents";
         private boolean rigged = true;
 
@@ -19,5 +19,9 @@ public class UndergroundLab {
                 throw new EndOfMissionException("Oh no, the safe alarm was triggered!");
             }
         }
+    }
+
+    public static class SpeedBoat {
+        private SpeedBoat() {}
     }
 }

@@ -1,22 +1,23 @@
 package com.javax1.secret.operation;
 
 import com.javax1.secret.base.*;
-import com.javax1.secret.base.UndergroundLab.Safe;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Operation {
-    private UndergroundLab lab = new UndergroundLab();
 
-    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Operation operation = new Operation();
         /*operation.interceptedCommunications();
         operation.identifyObject();
         operation.describeObject();
-        operation.interviewSuspects();*/
-        operation.stealDocuments();
+        operation.interviewSuspects();
+        operation.stealDocuments();*/
+        operation.summonSpeedBoat();
     }
 
     /**
@@ -113,20 +114,27 @@ public class Operation {
      * Or you could try disabling the alarm...
      */
     public void stealDocuments() throws NoSuchFieldException, IllegalAccessException {
-        Safe safe = lab.new Safe();
+        UndergroundLab.Safe safe = new UndergroundLab.Safe();
         String NAME_OF_FIELD = "content";
-        Class<Safe> safeClass = Safe.class;
+        var safeClass = UndergroundLab.Safe.class;
         Object content;
         // CODE BEGIN
-        Field contentField = safeClass.getDeclaredField(NAME_OF_FIELD);
-        contentField.setAccessible(true);
-        content = contentField.get(safe);
-        contentField.set(safe, "Nothing");
-        Field rigged = safeClass.getDeclaredField("rigged");
-        rigged.setAccessible(true);
-        rigged.set(safe, false);
+        content = "some documents";
         // CODE END
         safe.alarmCheck();
         Agent.checkDocuments(content.toString());
+    }
+
+    /**
+     * Time to escape! You will need a speedboat,
+     * because it's not a proper mission without a speedboat.
+     * The problem is, you can't just make a speedboat... Or can you?
+     */
+    public void summonSpeedBoat() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        UndergroundLab.SpeedBoat boat = null; // new UndergroundLab.SpeedBoat(); -> Oops, does not work!
+        var boatClass = UndergroundLab.SpeedBoat.class;
+        // CODE BEGIN
+        // CODE END
+        Agent.escape(boat);
     }
 }

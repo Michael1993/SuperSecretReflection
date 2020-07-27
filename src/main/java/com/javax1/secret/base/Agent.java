@@ -35,8 +35,14 @@ public class Agent {
     }
 
     public static void checkDocuments(String docs) {
-        if (!docs.equals("Very Secret Documents")) {
+        if (docs == null || !docs.equals("Very Secret Documents")) {
             throw new EndOfMissionException("You did not steal the documents from the safe!");
+        }
+    }
+
+    public static void escape(UndergroundLab.SpeedBoat boat) {
+        if (boat == null) {
+            throw new EndOfMissionException("You failed to escape the underground laboratory and got captured by (evil) henchmen!");
         }
     }
 }
