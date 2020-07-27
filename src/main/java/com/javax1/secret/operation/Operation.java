@@ -131,9 +131,10 @@ public class Operation {
      * The problem is, you can't just make a speedboat... Or can you?
      */
     public void summonSpeedBoat() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        UndergroundLab.SpeedBoat boat = null; // new UndergroundLab.SpeedBoat(); -> Oops, does not work!
+        UndergroundLab.SpeedBoat boat; // = new UndergroundLab.SpeedBoat(); -> Oops, does not work!
         var boatClass = UndergroundLab.SpeedBoat.class;
         // CODE BEGIN
+        boat = null;
         // CODE END
         Agent.escape(boat);
     }
