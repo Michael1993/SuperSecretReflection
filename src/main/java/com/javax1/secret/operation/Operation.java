@@ -3,7 +3,10 @@ package com.javax1.secret.operation;
 import com.javax1.secret.base.*;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,11 +15,12 @@ public class Operation {
 
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Operation operation = new Operation();
-        /*operation.interceptedCommunications();
+        operation.interceptedCommunications();
         operation.identifyObject();
         operation.describeObject();
         operation.interviewSuspects();
-        operation.stealDocuments();*/
+        operation.enter();
+        operation.stealDocuments();
         operation.summonSpeedBoat();
     }
 
@@ -37,7 +41,7 @@ public class Operation {
         List<Communication> calls;
         // CODE BEGIN
         calls = communications.stream()
-                .filter(communication -> true) // We only want phone calls (and exactly phone calls)!
+                .filter(communication -> communication.getClass().equals(Communication.PhoneCall.class)) // We only want phone calls (and exactly phone calls)!
                 .collect(Collectors.toList());
         // CODE END
         Communication.verify(calls);
@@ -52,7 +56,7 @@ public class Operation {
         Object content = Agent.getBriefcase().getContent();
         String contentName;
         // CODE BEGIN
-        contentName = content.toString();
+        contentName = content.getClass().getSimpleName();
         // CODE END
         Agent.check(contentName); // We are looking for a simple solution here.
     }
@@ -66,7 +70,8 @@ public class Operation {
         Object task = Unidentified.get();
         String mods;
         // CODE BEGIN
-        mods = "public?"; // We need the modifiers in a string.
+        int modifiers = task.getClass().getModifiers();
+        mods = Modifier.toString(modifiers); // We need the modifiers in a string.
         // CODE END
         Agent.identify(mods);
     }
@@ -76,13 +81,15 @@ public class Operation {
      * Who has an alibi and who does not?
      * The alibi is not a secret (it's {@code public}).
      */
-    public void interviewSuspects() {
-        final String NAME_OF_FIELD = "ALIBI";
+    public void interviewSuspects() throws NoSuchFieldException {
+        final String NAME_OF_FIELD = "alibi";
         List<Suspect> suspects = Suspect.list();
         Suspect criminal;
         // CODE BEGIN
         criminal = suspects.stream()
-                .filter(suspect -> true) // Do all of them have alibis?
+                .filter(suspect -> Stream.of(suspect.getClass().getFields())
+                        .map(Field::getName)
+                        .noneMatch(NAME_OF_FIELD::equals)) // Do all of them have alibis?
                 .findAny().orElse(null);
         // CODE END
         Agent.accuse(criminal);
@@ -99,7 +106,10 @@ public class Operation {
         Class<Entrance> entrance = Entrance.class;
         String phrase;
         // CODE BEGIN
-        phrase = "Open, sesame!"; // We need to listen at the Entrance...
+        Field field = Entrance.class.getDeclaredField(NAME_OF_FIELD);
+        field.setAccessible(true);
+        Object o = field.get(new Entrance());
+        phrase = o.toString(); // We need to listen at the Entrance...
         // CODE END
         Entrance.enter(phrase);
     }
@@ -117,12 +127,20 @@ public class Operation {
         UndergroundLab.Safe safe = new UndergroundLab.Safe();
         String NAME_OF_FIELD = "content";
         var safeClass = UndergroundLab.Safe.class;
-        Object content;
         // CODE BEGIN
-        content = "some documents";
+        safe = new UndergroundLab.Safe() {
+            @Override
+            public boolean isRigged() {
+                return false;
+            }
+        };
+        Field declaredField = safeClass.getDeclaredField(NAME_OF_FIELD);
+        declaredField.setAccessible(true);
+        String secret = (String) declaredField.get(safe);
+        declaredField.set(safe, "null");
         // CODE END
         safe.alarmCheck();
-        Agent.checkDocuments(content.toString());
+        Agent.checkDocuments(secret);
     }
 
     /**
@@ -134,7 +152,9 @@ public class Operation {
         UndergroundLab.SpeedBoat boat; // = new UndergroundLab.SpeedBoat(); -> Oops, does not work!
         var boatClass = UndergroundLab.SpeedBoat.class;
         // CODE BEGIN
-        boat = null;
+        Constructor<?> constructor = Arrays.stream(boatClass.getDeclaredConstructors()).findAny().orElseThrow();
+        constructor.setAccessible(true);
+        boat = (UndergroundLab.SpeedBoat) constructor.newInstance();
         // CODE END
         Agent.escape(boat);
     }

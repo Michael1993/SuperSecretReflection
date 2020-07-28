@@ -16,9 +16,6 @@ public class Help {
      */
     public static void main(String[] args) throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
         fieldFinder();
-        fieldValues();
-        methodFinder();
-        modified();
     }
 
     // Here are two classes. One extends the other.
@@ -27,9 +24,9 @@ public class Help {
      * First, the base class.
      */
     static strictfp class Base {
-        protected String a = "Hello ";
+        protected final String a = "Hello ";
         public String b;
-        private String c;
+        private  String c;
 
         public static void foo() {
         }
@@ -92,11 +89,11 @@ public class Help {
 
     private static void methodFinder() {
         Class<Extend> klass = Extend.class;
-        Method[] declaredMethods = klass.getDeclaredMethods();
+        Method[] declaredMethods = klass.getDeclaredMethods(); // What will this return? Try to guess!
         printMethods(declaredMethods);
-        Method[] methods = klass.getMethods();
+        Method[] methods = klass.getMethods(); // What will this return? Try to guess!
         printMethods(methods);
-        Method[] baseMethods = Base.class.getDeclaredMethods();
+        Method[] baseMethods = Base.class.getDeclaredMethods(); // What will this return? Try to guess!
         printMethods(baseMethods);
     }
 

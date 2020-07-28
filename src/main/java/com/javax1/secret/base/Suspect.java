@@ -18,7 +18,7 @@ public class Suspect {
     }
 
     private static class Innocent extends Suspect {
-        public final String ALIBI = "I am innocent!";
+        public final String alibi = "I am innocent!";
     }
 
     private static class Guilty extends Suspect {
